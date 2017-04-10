@@ -1,3 +1,26 @@
+var GreeterMessage = React.createClass({
+    render: function () {
+        return (
+            <div>
+                <h1>Some H1</h1>
+                <p>Some Paragraph</p>
+            </div>
+        );
+    }
+});
+
+var GreeterForm = React.createClass({
+    render: function() {
+        return (
+
+                <form>
+                    <input type="text" ref="name"/>
+                    <button>Some button</button>
+                </form>
+        );
+    }
+});
+
 var Greeter = React.createClass({
     // Default props will load when no value has been passed in
     getDefaultProps: function() {
@@ -36,11 +59,15 @@ var Greeter = React.createClass({
                 <h1>Hello {name}!</h1>
                 <p>{message}</p>
 
+                <GreeterMessage/>
+
                 <form onSubmit={this.onButtonClick}>
                     {/*name is added to list of refs*/}
                     <input type="text" ref="name"/>
                     <button>Set Name</button>
                 </form>
+
+                <GreeterForm/>
             </div>
         );
     }
