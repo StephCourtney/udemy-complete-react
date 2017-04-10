@@ -6,20 +6,38 @@ var Greeter = React.createClass({
             message: 'This is from a component'
         }
     },
+    // States are needed as props cannot be changed by component
+    getInitialState: function() {
+        return {
+            name: this.props.name,
+            message: this.props.message
+        };
+    },
     onButtonClick: function(e) {
+        // Stops page refresh
         e.preventDefault();
-        var name = this.refs.name.value;
-        alert(name);
+
+        var nameRef = this.refs.name;
+        var name = nameRef.value;
+        nameRef.value = "";
+
+        if(typeof name === 'string' && name.length > 0) {
+            // Used to change the state of a components element
+            this.setState({
+                name: name
+            });
+        }
     },
     render: function(){
-        var name = this.props.name;
-        var message = this.props.message;
+        var name = this.state.name;
+        var message = this.state.message;
         return (
             <div>
                 <h1>Hello {name}!</h1>
                 <p>{message}</p>
 
                 <form onSubmit={this.onButtonClick}>
+                    {/*name is added to list of refs*/}
                     <input type="text" ref="name"/>
                     <button>Set Name</button>
                 </form>
