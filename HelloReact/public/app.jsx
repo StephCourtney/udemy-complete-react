@@ -1,73 +1,75 @@
+// Presentational Component
 var GreeterMessage = React.createClass({
     render: function () {
+        var name = this.props.name;
+        var message = this.props.message;
         return (
             <div>
-                <h1>Some H1</h1>
-                <p>Some Paragraph</p>
+                <h1>Hello {name}!</h1>
+                <p>{message}</p>
             </div>
         );
     }
 });
 
+// Presentational Component
 var GreeterForm = React.createClass({
-    render: function() {
-        return (
+    onFormSubmit: function (e) {
+        e.preventDefault();
 
-                <form>
-                    <input type="text" ref="name"/>
-                    <button>Some button</button>
-                </form>
+        var updates = {};
+        var name = this.refs.name.value;
+        var message = this.refs.message.value;
+        if (name.length > 0) {
+            this.refs.name.value = '';
+            updates.name = name;
+        }
+        if (message.length > 0) {
+            this.refs.message.value = '';
+            updates.message = message;
+        }
+        this
+            .props
+            .onNewData(updates);
+    },
+    render: function () {
+        return (
+            <form onSubmit={this.onFormSubmit}>
+                <div>
+                    <input placeholder="Enter Name" type="text" ref="name"/>
+                </div>
+                <div>
+                    <textarea placeholder="Enter Message" ref="message"></textarea>
+                </div>
+                <div>
+                    <button>Submit</button>
+                </div>
+            </form>
         );
     }
 });
 
+// Container Component
 var Greeter = React.createClass({
     // Default props will load when no value has been passed in
-    getDefaultProps: function() {
-        return {
-            name: 'React',
-            message: 'This is from a component'
-        }
+    getDefaultProps: function () {
+        return {name: 'React', message: 'This is from a component'}
     },
     // States are needed as props cannot be changed by component
-    getInitialState: function() {
-        return {
-            name: this.props.name,
-            message: this.props.message
-        };
+    getInitialState: function () {
+        return {name: this.props.name, message: this.props.message};
     },
-    onButtonClick: function(e) {
-        // Stops page refresh
-        e.preventDefault();
-
-        var nameRef = this.refs.name;
-        var name = nameRef.value;
-        nameRef.value = "";
-
-        if(typeof name === 'string' && name.length > 0) {
-            // Used to change the state of a components element
-            this.setState({
-                name: name
-            });
-        }
+    handleNewData: function (updates) {
+        this.setState(updates);
     },
-    render: function(){
+    render: function () {
         var name = this.state.name;
         var message = this.state.message;
         return (
             <div>
-                <h1>Hello {name}!</h1>
-                <p>{message}</p>
+                <GreeterMessage name={name} message={message}/>
 
-                <GreeterMessage/>
-
-                <form onSubmit={this.onButtonClick}>
-                    {/*name is added to list of refs*/}
-                    <input type="text" ref="name"/>
-                    <button>Set Name</button>
-                </form>
-
-                <GreeterForm/>
+                <GreeterForm onNewData={this.handleNewData}/>
             </div>
         );
     }
@@ -77,5 +79,4 @@ var firstName = 'Steph';
 var greetMessage = 'How are you?';
 
 ReactDOM.render(
-    <Greeter name={firstName} message={greetMessage}/>, 
-    document.getElementById('app'));
+    <Greeter name={firstName} message={greetMessage}/>, document.getElementById('app'));
